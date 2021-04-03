@@ -1,1 +1,0 @@
-# Contains mostly negative reviews
