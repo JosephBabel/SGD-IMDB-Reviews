@@ -1,25 +1,25 @@
-## Instructions for Classifying Train and Test Data
+# Instructions for Classifying Train and Test Data
 We need an equal amount of data for each classification in both our training and test set.
 To classify 300 reviews for train and 300 reviews for test there will be
 60 reviews for each classification (mostly negative, slightly negative, neurtral, slightly positive, mostly positive).
 
 ### Task Distribution
 #### Cameron:
-Will go through the order in Train-Negative-Order.txt and classify each review in the aclIMDB/train/neg folder into 3 folders (Mostly-Negative, Slightly-Negative, Neutral)
-until there are 60 reviews in Labeled-Data/Train/Mostly-Negative folder, 60 reviews in Labeled-Data/Train/Slightly-Negative folder, and 30 reviews in Labeled-Data/Train/Neutral folder.
+Will go through the order in train_negative_order.txt and classify each review in the aclIMDB/train/neg folder into 3 folders (0_mostly_negative, 1_slightly_negative, 2_neutral)
+until there are 60 reviews in labeled_data/train/0_mostly-negative folder, 60 reviews in labeled-data/train/1_slightly_negative folder, and 30 reviews in labeled_data/train/2_neutral folder.
 
-Will also go through the order in Test-Negative-Order.txt and classify each review in the aclIMDB/test/neg folder into 3 folders (Mostly-Negative, Slightly-Negative, Neutral)
-until there are 60 reviews in Labeled-Data/Test/Mostly-Negative folder, 60 reviews in Labeled-Data/Test/Slightly-Negative folder, and 30 reviews in Labeled-Data/Test/Neutral folder.
+Will also go through the order in test_negative_order.txt and classify each review in the aclIMDB/test/neg folder into 3 folders (0_mostly_negative, 1_slightly_negative, 2_neutral)
+until there are 60 reviews in labeled_data/test/0_mostly_negative folder, 60 reviews in labeled_data/test/1_slightly_negative folder, and 30 reviews in labeled_data/test/2_neutral folder.
 
 #### Joseph:
-Will go through the order in Train-Positive-Order.txt and classify each review in the aclIMDB/train/pos folder into 3 folders (Mostly-Positive, Slightly-Positive, Neutral)
-until there are 60 reviews in Labeled-Data/Train/Mostly-Positive folder, 60 reviews in Labeled-Data/Train/Slightly-Positive folder, and 30 reviews in Labeled-Data/Train/Neutral folder.
+Will go through the order in train_positive_order.txt and classify each review in the aclIMDB/train/pos folder into 3 folders (4_mostly_positive, 3_slightly_positive, 2_neutral)
+until there are 60 reviews in labeled_data/train/4_mostly_positive folder, 60 reviews in labeled_data/train/3_slightly_positive folder, and 30 reviews in labeled_data/train/2_neutral folder.
 
-Will also go through the order in Test-Positive-Order.txt and classify each review in the aclIMDB/test/pos folder into 3 folders (Mostly-Positive, Slightly-Positive, Neutral)
-until there are 60 reviews in Labeled-Data/Test/Mostly-Positive folder, 60 reviews in Labeled-Data/Test/Slightly-Positive folder, and 30 reviews in Labeled-Data/Test/Neutral folder.
+Will also go through the order in test_positive_order.txt and classify each review in the aclIMDB/test/pos folder into 3 folders (4_mostly_positive, 3_slightly_positive, 2_neutral)
+until there are 60 reviews in labeled_data/test/4_mostly_positive folder, 60 reviews in labeled_data/test/3_slightly_positive folder, and 30 reviews in labeled_data/test/2_neutral folder.
 
 ### Classification Rules
-When we combine our data we will have 60 reviews for each classification for both train and test data
+When we combine our data we will have 60 reviews for each classification for both train and test data and 600 labled reviews in total.
 
 Reviews will be classified by these rules:
 
