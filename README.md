@@ -10,6 +10,7 @@ Using Anaconda Prompt run these commands in project directory
 #### If using different package manager ensure you have the following dependencies
 - python=3.8.8
 - scikit-learn=0.24.1
+- matplotlib=3.3.4
 
-## Anaconda Run Program
+## Run Program
 - python main.py
