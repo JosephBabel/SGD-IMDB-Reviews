@@ -28,7 +28,9 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 # CLASSIFIERS
 from sklearn.linear_model import SGDClassifier
+from sklearn import svm
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 # METRICS
 from sklearn.metrics import classification_report
 # CLUSTERING
@@ -201,7 +203,13 @@ def sgd_classifier(X_train, y_train, X_test):
 # Return:
 #   prediction  - classifier prediction
 def svm_classifier(X_train, y_train, X_test):
-    return 0
+    clf = svm.SVC()
+
+    clf.fit(X_train, y_train)
+
+    prediction = clf.predict(X_test)
+
+    return prediction
 
 
 # Description: Naive Bayes classifier
@@ -229,7 +237,13 @@ def nb_classifier(X_train, y_train, X_test):
 # Return:
 #   prediction  - classifier prediction
 def me_classifier(X_train, y_train, X_test):
-    return 0
+    clf = LogisticRegression()
+
+    clf.fit(X_train, y_train)
+
+    prediction = clf.predict(X_test)
+
+    return prediction
 
 ##################################################
 # PLOT CLUSTERED DATA WITH FEATURES
@@ -260,6 +274,31 @@ def plot_feature_clusters(X):
 ##################################################
 
 
+def cross_validate(X):
+    skf = StratifiedKFold(n_splits=5)
+    StratifiedKFold(n_splits=5, random_state=1, shuffle=True)
+    for train_index, test_index in skf.split(X, y):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+
+        # perform predictions on classifierse
+        y_pred = sgd_classifier(X_train, y_train, X_test)
+        print("==========SGD CLASSIFICATION REPORT==========")
+        print(classification_report(y_test, y_pred))\
+
+        y_pred = svm_classifier(X_train, y_train, X_test)
+        print("==========SVM CLASSIFICATION REPORT==========")
+        print(classification_report(y_test, y_pred))\
+
+        y_pred = nb_classifier(X_train, y_train, X_test)
+        print("==========NB CLASSIFICATION REPORT==========")
+        print(classification_report(y_test, y_pred))
+
+        y_pred = me_classifier(X_train, y_train, X_test)
+        print("==========ME CLASSIFICATION REPORT==========")
+        print(classification_report(y_test, y_pred))
+
+
 # FEATURE 1
 # Description: Tfidf unigram test with classification report and cross validation
 def tfidf_unigram_test():
@@ -271,35 +310,59 @@ def tfidf_unigram_test():
                                max_features=5000)
 
     X = tfidfvec.fit_transform(review_text)
-    skf = StratifiedKFold(n_splits=5)
-    StratifiedKFold(n_splits=5, random_state=1, shuffle=True)
 
-    # enumerate the splits and summarize distributions
-    for train_index, test_index in skf.split(X, y):
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
-
-        # test
-        y_pred = sgd_classifier(X_train, y_train, X_test)
-        print("==========TFIDF W/ UNIGRAMS SGD CLASSIFICATION REPORT==========")
-        print(classification_report(y_test, y_pred))\
-
-        y_pred = nb_classifier(X_train, y_train, X_test)
-        print("==========TFIDF W/ UNIGRAMS NB CLASSIFICATION REPORT==========")
-        print(classification_report(y_test, y_pred))
+    cross_validate(X)
 
     plot_feature_clusters(X)
 
+# TODO: FEATURE 2
 # FEATURE 2
 # Description: Add another feature here
+def another_test():
+    tfidfvec = TfidfVectorizer()  # Use this or CountVectorizer
 
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# TODO: FEATURE 3
 # FEATURE 3
 # Description: Add another feature here
+def do_another_test():
+    tfidfvec = TfidfVectorizer()  # Use this or CountVectorizer
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
 
 
 # run predictions
-
+# Feature 1
+print("==========================================")
+print("Testing Feature 1: TFIDF W/ UNIGRAMS...")
+print("==========================================\n")
 tfidf_unigram_test()
-# run_another_test()
-# run_another_test()
-# run_another_test()
+# TODO: FEATURE 2
+# Feature 2
+print("==========================================")
+print("Testing Feature 2: {FEATURE NAME}...")
+print("==========================================\n")
+print("N/A")
+# another_test()
+# TODO: FEATURE 3
+# Feature 3
+print("==========================================")
+print("Testing Feature 3: {FEATURE NAME}...")
+print("==========================================\n")
+print("N/A")
+# do_another_test()
+# TODO: OTHER FEATURES
+print("==========================================")
+print("Testing Feature N: {FEATURE NAME}...")
+print("==========================================\n")
+print("N/A")
