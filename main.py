@@ -16,7 +16,7 @@
 # train and test ME classifier
 ##################################################
 # **Required Modules:**
-# Python 3.8, scikit-learn 0.24
+# Python 3.8.8, scikit-learn 0.24.1, matplotlib 3.3.4
 ##################################################
 
 # FILE I/O
@@ -28,26 +28,62 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 # CLASSIFIERS
 from sklearn.linear_model import SGDClassifier
-# METRICS
-from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
+# METRICS
+from sklearn.metrics import classification_report
+# CLUSTERING
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+# CROSS-VALIDATION
+from sklearn.model_selection import StratifiedKFold
+# UTILITY
+import numpy as np
+import matplotlib.pyplot as plt
+
+##################################################
+# COMPILE REVIEWS
+##################################################
 
 
-def create_csv_file(filename, train):
+# Description: Add reviews of a certain path to specified csv file
+# Args:
+#   writer              - file to write to
+#   path_to_review      - path of reviews to add
+#   count               - current count of added reviews
+#   classification      - sentiment classification for review
+# Return:
+#   count               - current count of added reviews
+def add_review_to_csv(writer, path_to_review, count, classification):
+    for f in os.listdir(path_to_review):
+        if f.endswith(".txt"):
+            open_file = open(path_to_review + f, "r")
+            data = open_file.read()
+            writer.writerow([count, f'"{data}"', classification])
+            count += 1
+            open_file.close()
+
+    return count
+
+
+# Description: Create a csv file with reviews and sentiment classification
+# Args:
+#   filename    - name of file to create
+#   train       - bool if using reviews from train folder
+#   test        - bool if using reviews from test folder
+def create_csv_file(filename, train, test):
     header = ['row_number', 'text', 'classification']
 
-    if train:
-        path_to_mostly_neg = "labeled_data/train/0_mostly_negative/"
-        path_to_slightly_neg = "labeled_data/train/1_slightly_negative/"
-        path_to_neutral = "labeled_data/train/2_neutral/"
-        path_to_slightly_pos = "labeled_data/train/3_slightly_positive/"
-        path_to_mostly_pos = "labeled_data/train/4_mostly_positive/"
-    else:
-        path_to_mostly_neg = "labeled_data/test/0_mostly_negative/"
-        path_to_slightly_neg = "labeled_data/test/1_slightly_negative/"
-        path_to_neutral = "labeled_data/test/2_neutral/"
-        path_to_slightly_pos = "labeled_data/test/3_slightly_positive/"
-        path_to_mostly_pos = "labeled_data/test/4_mostly_positive/"
+    train_path_to_mostly_neg = "labeled_data/train/0_mostly_negative/"
+    train_path_to_slightly_neg = "labeled_data/train/1_slightly_negative/"
+    train_path_to_neutral = "labeled_data/train/2_neutral/"
+    train_path_to_slightly_pos = "labeled_data/train/3_slightly_positive/"
+    train_path_to_mostly_pos = "labeled_data/train/4_mostly_positive/"
+
+    test_path_to_mostly_neg = "labeled_data/test/0_mostly_negative/"
+    test_path_to_slightly_neg = "labeled_data/test/1_slightly_negative/"
+    test_path_to_neutral = "labeled_data/test/2_neutral/"
+    test_path_to_slightly_pos = "labeled_data/test/3_slightly_positive/"
+    test_path_to_mostly_pos = "labeled_data/test/4_mostly_positive/"
 
     count = 0
 
@@ -55,60 +91,50 @@ def create_csv_file(filename, train):
         writer = csv.writer(f1, delimiter=',')
         writer.writerow(header)
         # add mostly negative reviews
-        for f in os.listdir(path_to_mostly_neg):
-            classification = 0
-            if f.endswith(".txt"):
-                open_file = open(path_to_mostly_neg + f, "r")
-                data = open_file.read()
-                writer.writerow([count, f'"{data}"', classification])
-                count += 1
-                open_file.close()
+        if train:
+            count = add_review_to_csv(writer, train_path_to_mostly_neg, count, 0)
+        if test:
+            count = add_review_to_csv(writer, test_path_to_mostly_neg, count, 0)
+
         # add slightly negative reviews
-        for f in os.listdir(path_to_slightly_neg):
-            classification = 1
-            if f.endswith(".txt"):
-                open_file = open(path_to_slightly_neg + f, "r")
-                data = open_file.read()
-                writer.writerow([count, f'"{data}"', classification])
-                count += 1
-                open_file.close()
+        if train:
+            count = add_review_to_csv(writer, train_path_to_slightly_neg, count, 1)
+        if test:
+            count = add_review_to_csv(writer, test_path_to_slightly_neg, count, 1)
+
         # add neutral reviews
-        for f in os.listdir(path_to_neutral):
-            classification = 2
-            if f.endswith(".txt"):
-                open_file = open(path_to_neutral + f, "r")
-                data = open_file.read()
-                writer.writerow([count, f'"{data}"', classification])
-                count += 1
-                open_file.close()
+        if train:
+            count = add_review_to_csv(writer, train_path_to_neutral, count, 2)
+        if test:
+            count = add_review_to_csv(writer, test_path_to_neutral, count, 2)
+
         # add slightly positive reviews
-        for f in os.listdir(path_to_slightly_pos):
-            classification = 3
-            if f.endswith(".txt"):
-                open_file = open(path_to_slightly_pos + f, "r")
-                data = open_file.read()
-                writer.writerow([count, f'"{data}"', classification])
-                count += 1
-                open_file.close()
+        if train:
+            count = add_review_to_csv(writer, train_path_to_slightly_pos, count, 3)
+        if test:
+            count = add_review_to_csv(writer, test_path_to_slightly_pos, count, 3)
+
         # add mostly positive reviews
-        for f in os.listdir(path_to_mostly_pos):
-            classification = 4
-            if f.endswith(".txt"):
-                open_file = open(path_to_mostly_pos + f, "r")
-                data = open_file.read()
-                writer.writerow([count, f'"{data}"', classification])
-                count += 1
-                open_file.close()
+        if train:
+            count = add_review_to_csv(writer, train_path_to_mostly_pos, count, 4)
+        if test:
+            add_review_to_csv(writer, test_path_to_mostly_pos, count, 4)
 
 
-print("Compiling reviews into ./generated/imdb_train.csv, ./generated/imdb_test.csv ...\n")
-create_csv_file("./generated/imdb_train.csv", train=True)
-create_csv_file("./generated/imdb_test.csv", train=False)
+print("Compiling reviews into ./generated/imdb_train_test.csv ...\n")
+create_csv_file("./generated/imdb_train_test.csv", train=True, test=True)
+
+##################################################
+# LOAD IN REVIEWS
+##################################################
 
 
-# ## Create List of Reviews and Classifications
-# review_text_train, review_text_test - contain review text in preparation for converting them into n-grams.
-# y_train, y_test - contain classification labels for both training and testing our model.
+# Description: Load raw text reviews and classifications from csv file
+# Args:
+#   filename        - name of csv file to read from
+# Return:
+#   review_text     - contain review text in preparation for converting them into n-grams.
+#   y_train, y_test - contain classification labels for both training and testing our model.
 def create_reviews_list(filename):
     review_text = []
     classification = []
@@ -118,159 +144,162 @@ def create_reviews_list(filename):
         for row in reader:
             review_text.append(row[1])
             classification.append(row[2])
-    return review_text, classification
+    return review_text, np.array(list(map(int, classification)))
+
+##################################################
+# DATA PREPROCESSING
+##################################################
 
 
-print("Loading reviews from ./generated/imdb_train.csv, ./generated/imdb_test.csv ...\n")
-review_text_train, y_train = create_reviews_list("./generated/imdb_train.csv")
-review_text_test, y_test = create_reviews_list("./generated/imdb_test.csv")
-
-# convert classifications to list of integers
-y_train = list(map(int, y_train))
-y_test = list(map(int, y_test))
+print("Loading reviews from ./generated/imdb_train_test.csv ...\n")
+review_text, y = create_reviews_list("./generated/imdb_train_test.csv")
 
 
-# ## Preprocess Data
-# remove html tags and special characters
+# Description: Remove html tags and special characters from raw review text
+# Args:
+#   review_text     - raw review text to preprocess
+# Return:
+#   review_text     - preprocessed review text
 def preprocess_data(review_text):
     for index, row in enumerate(review_text):
         row = re.sub(r'<.*?>', '', row)
-        row = re.sub(r'[^a-zA-Z. ]', '', row)
+        row = re.sub(r'[^a-zA-Z ]', '', row)
         review_text[index] = row
     return review_text
 
 
 print("Removing special characters and html tags from loaded data...\n")
-review_text_train = preprocess_data(review_text_train)
-review_text_test = preprocess_data(review_text_test)
+review_text = preprocess_data(review_text)
+
+##################################################
+# CLASSIFIERS
+##################################################
 
 
-# ## Convert Review Text Into N-Grams
-def text_to_ngram(review_text_train, review_text_test, ngram_range, tfidf):
-    if tfidf:
-        # use_idf when 'True' enables inverse-document-frequency re-weighting
-        # ngram_range = ngram_range sets the lower and upper boundary of range of n-values
-        tfidfvec = TfidfVectorizer(stop_words="english",
-                                   analyzer='word',
-                                   lowercase=True,
-                                   use_idf=True,
-                                   ngram_range=ngram_range)
-
-        # training data learns vocabulary dictionary and returns document-term matrix 
-        x_train = tfidfvec.fit_transform(review_text_train)
-
-        # transforms the test data to document-term matrix
-        x_test = tfidfvec.transform(review_text_test)
-    else:
-        cvec = CountVectorizer(stop_words="english",
-                               analyzer='word',
-                               lowercase=True,
-                               ngram_range=ngram_range)
-
-        x_train = cvec.fit_transform(review_text_train)
-
-        x_test = cvec.transform(review_text_test)
-
-    return x_train, x_test
-
-
-# ## SGD Classifier (Stochastic Gradient Descent)
-def sgd_classifier(review_text_train, y_train, review_text_test, ngram_range, tfidf):
-    x_train, x_test = text_to_ngram(review_text_train, review_text_test, ngram_range, tfidf)
-
+# Description: Stochastic Gradient Descent classifier
+# Args:
+#   X_train     - train features
+#   y_train     - train labels
+#   X_test      - test features
+# Return:
+#   prediction  - classifier prediction
+def sgd_classifier(X_train, y_train, X_test):
     clf = SGDClassifier(loss="hinge", penalty="l1")
 
-    clf.fit(x_train, y_train)
+    clf.fit(X_train, y_train)
 
-    prediction = clf.predict(x_test)
+    prediction = clf.predict(X_test)
 
     return prediction
 
 
-# ## SVM Classifier (Support Vector Machine)
-def svm_classifier(review_text_train, y_train, review_text_test, ngram_range, tfidf):
-    x_train, x_test = text_to_ngram(review_text_train, review_text_test, ngram_range, tfidf)
+# Description: Support Vector Machine classifier
+# Args:
+#   X_train     - train features
+#   y_train     - train labels
+#   X_test      - test features
+# Return:
+#   prediction  - classifier prediction
+def svm_classifier(X_train, y_train, X_test):
+    return 0
 
 
-# ## NB Classifier (Naive Bayes)
-def nb_classifier(review_text_train, y_train, review_text_test, ngram_range, tfidf):
-    x_train, x_test = text_to_ngram(review_text_train, review_text_test, ngram_range, tfidf)
-
+# Description: Naive Bayes classifier
+# Args:
+#   X_train     - train features
+#   y_train     - train labels
+#   X_test      - test features
+# Return:
+#   prediction  - classifier prediction
+def nb_classifier(X_train, y_train, X_test):
     clf = MultinomialNB()
 
-    clf.fit(x_train, y_train)
+    clf.fit(X_train, y_train)
 
-    prediction = clf.predict(x_test)
+    prediction = clf.predict(X_test)
 
     return prediction
 
 
-# ## ME Classifier (Maximum Entropy)
-def me_classifier(review_text_train, y_train, review_text_test, ngram_range, tfidf):
-    x_train, x_test = text_to_ngram(review_text_train, review_text_test, ngram_range, tfidf)
+# Description: Maximum Entropy classifier
+# Args:
+#   X_train     - train features
+#   y_train     - train labels
+#   X_test      - test features
+# Return:
+#   prediction  - classifier prediction
+def me_classifier(X_train, y_train, X_test):
+    return 0
+
+##################################################
+# PLOT CLUSTERED DATA WITH FEATURES
+##################################################
+
+# Description: Plot clustered features to visualize feature performance
+# Args:
+#   X   - features
+def plot_feature_clusters(X):
+    pca = PCA(2)
+    kmeans = KMeans(n_clusters=5)
+    df = pca.fit_transform(X.toarray())
+
+    # predict labels for clusters
+    label = kmeans.fit_predict(df)
+
+    # get unique labels
+    u_labels = np.unique(label)
+
+    # plot results
+    for i in u_labels:
+        plt.scatter(df[label == i, 0], df[label == i, 1], label=i)
+    plt.legend()
+    plt.show()
+
+##################################################
+# PREDICTIONS
+##################################################
 
 
-# # Predictions
-# ## SGD Classifier
-print("Training and predicting Stochastic Gradient Descent Classifier...\n")
-y_pred_unigram = sgd_classifier(review_text_train, y_train, review_text_test, (1, 1), False)
-y_pred_bigram = sgd_classifier(review_text_train, y_train, review_text_test, (2, 2), False)
-y_pred_trigram = sgd_classifier(review_text_train, y_train, review_text_test, (3, 3), False)
-y_pred_unigram_bigram = sgd_classifier(review_text_train, y_train, review_text_test, (1, 2), False)
-y_pred_bigram_trigram = sgd_classifier(review_text_train, y_train, review_text_test, (2, 3), False)
-y_pred_unigram_bigram_trigram = sgd_classifier(review_text_train, y_train, review_text_test, (1, 3), False)
+# FEATURE 1
+# Description: Tfidf unigram test with classification report and cross validation
+def tfidf_unigram_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(1, 1),
+                               max_features=5000)
 
-y_pred_unigram_tfidf = sgd_classifier(review_text_train, y_train, review_text_test, (1, 1), True)
-y_pred_bigram_tfidf = sgd_classifier(review_text_train, y_train, review_text_test, (2, 2), True)
-y_pred_trigram_tfidf = sgd_classifier(review_text_train, y_train, review_text_test, (3, 3), True)
-y_pred_unigram_bigram_tfidf = sgd_classifier(review_text_train, y_train, review_text_test, (1, 2), True)
-y_pred_bigram_trigram_tfidf = sgd_classifier(review_text_train, y_train, review_text_test, (2, 3), True)
-y_pred_unigram_bigram_trigram_tfidf = sgd_classifier(review_text_train, y_train, review_text_test, (1, 3), True)
+    X = tfidfvec.fit_transform(review_text)
+    skf = StratifiedKFold(n_splits=5)
+    StratifiedKFold(n_splits=5, random_state=1, shuffle=True)
 
-print("SGD Classifier Accuracy Scores:")
-print("Unigram:\t\t\t\t" + str(accuracy_score(y_test, y_pred_unigram)))
-print("Bigram:\t\t\t\t\t" + str(accuracy_score(y_test, y_pred_bigram)))
-print("Trigram:\t\t\t\t" + str(accuracy_score(y_test, y_pred_trigram)))
-print("Unigram + Bigram:\t\t\t" + str(accuracy_score(y_test, y_pred_unigram_bigram)))
-print("Bigram + Trigram:\t\t\t" + str(accuracy_score(y_test, y_pred_bigram_trigram)))
-print("Unigram + Bigram + Trigram:\t\t" + str(accuracy_score(y_test, y_pred_unigram_bigram_trigram)) + "\n")
+    # enumerate the splits and summarize distributions
+    for train_index, test_index in skf.split(X, y):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
 
-print("Unigram w/ tf-idf:\t\t\t" + str(accuracy_score(y_test, y_pred_unigram_tfidf)))
-print("Bigram w/ tf-idf:\t\t\t" + str(accuracy_score(y_test, y_pred_bigram_tfidf)))
-print("Trigram w/ tf-idf:\t\t\t" + str(accuracy_score(y_test, y_pred_trigram_tfidf)))
-print("Unigram + Bigram w/ tf-idf:\t\t" + str(accuracy_score(y_test, y_pred_unigram_bigram_tfidf)))
-print("Bigram + Trigram w/ tf-idf:\t\t" + str(accuracy_score(y_test, y_pred_bigram_trigram_tfidf)))
-print(
-    "Unigram + Bigram + Trigram w/ tf-idf:\t" + str(accuracy_score(y_test, y_pred_unigram_bigram_trigram_tfidf)) + "\n")
+        # test
+        y_pred = sgd_classifier(X_train, y_train, X_test)
+        print("==========TFIDF W/ UNIGRAMS SGD CLASSIFICATION REPORT==========")
+        print(classification_report(y_test, y_pred))\
 
-# ## NB Classifier
-print("Training and predicting Naive Bayes Classifier ...\n")
-y_pred_unigram = nb_classifier(review_text_train, y_train, review_text_test, (1, 1), False)
-y_pred_bigram = nb_classifier(review_text_train, y_train, review_text_test, (2, 2), False)
-y_pred_trigram = nb_classifier(review_text_train, y_train, review_text_test, (3, 3), False)
-y_pred_unigram_bigram = nb_classifier(review_text_train, y_train, review_text_test, (1, 2), False)
-y_pred_bigram_trigram = nb_classifier(review_text_train, y_train, review_text_test, (2, 3), False)
-y_pred_unigram_bigram_trigram = nb_classifier(review_text_train, y_train, review_text_test, (1, 3), False)
+        y_pred = nb_classifier(X_train, y_train, X_test)
+        print("==========TFIDF W/ UNIGRAMS NB CLASSIFICATION REPORT==========")
+        print(classification_report(y_test, y_pred))
 
-y_pred_unigram_tfidf = nb_classifier(review_text_train, y_train, review_text_test, (1, 1), True)
-y_pred_bigram_tfidf = nb_classifier(review_text_train, y_train, review_text_test, (2, 2), True)
-y_pred_trigram_tfidf = nb_classifier(review_text_train, y_train, review_text_test, (3, 3), True)
-y_pred_unigram_bigram_tfidf = nb_classifier(review_text_train, y_train, review_text_test, (1, 2), True)
-y_pred_bigram_trigram_tfidf = nb_classifier(review_text_train, y_train, review_text_test, (2, 3), True)
-y_pred_unigram_bigram_trigram_tfidf = nb_classifier(review_text_train, y_train, review_text_test, (1, 3), True)
+    plot_feature_clusters(X)
 
-print("NB Classifier Accuracy Scores:")
-print("Unigram:\t\t\t\t" + str(accuracy_score(y_test, y_pred_unigram)))
-print("Bigram:\t\t\t\t\t" + str(accuracy_score(y_test, y_pred_bigram)))
-print("Trigram:\t\t\t\t" + str(accuracy_score(y_test, y_pred_trigram)))
-print("Unigram + Bigram:\t\t\t" + str(accuracy_score(y_test, y_pred_unigram_bigram)))
-print("Bigram + Trigram:\t\t\t" + str(accuracy_score(y_test, y_pred_bigram_trigram)))
-print("Unigram + Bigram + Trigram:\t\t" + str(accuracy_score(y_test, y_pred_unigram_bigram_trigram)) + "\n")
+# FEATURE 2
+# Description: Add another feature here
 
-print("Unigram w/ tf-idf:\t\t\t" + str(accuracy_score(y_test, y_pred_unigram_tfidf)))
-print("Bigram w/ tf-idf:\t\t\t" + str(accuracy_score(y_test, y_pred_bigram_tfidf)))
-print("Trigram w/ tf-idf:\t\t\t" + str(accuracy_score(y_test, y_pred_trigram_tfidf)))
-print("Unigram + Bigram w/ tf-idf:\t\t" + str(accuracy_score(y_test, y_pred_unigram_bigram_tfidf)))
-print("Bigram + Trigram w/ tf-idf:\t\t" + str(accuracy_score(y_test, y_pred_bigram_trigram_tfidf)))
-print(
-    "Unigram + Bigram + Trigram w/ tf-idf:\t" + str(accuracy_score(y_test, y_pred_unigram_bigram_trigram_tfidf)) + "\n")
+# FEATURE 3
+# Description: Add another feature here
+
+
+# run predictions
+
+tfidf_unigram_test()
+# run_another_test()
+# run_another_test()
+# run_another_test()
