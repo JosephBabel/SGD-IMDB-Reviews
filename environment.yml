@@ -1,0 +1,5 @@
+name: csc664-sentiment
+dependencies:
+  - python=3.8.*
+  - scikit-learn=0.24.*
+  - nltk=3.6.*
