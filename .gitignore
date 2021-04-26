@@ -10,6 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
+.idea/
 dist/
 downloads/
 eggs/
@@ -127,3 +128,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+desktop.ini
