@@ -37,7 +37,6 @@ from sklearn.metrics import classification_report
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 # CROSS-VALIDATION
-from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import cross_val_predict
 # UTILITY
 import numpy as np
