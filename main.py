@@ -37,7 +37,7 @@ from sklearn.metrics import classification_report
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 # CROSS-VALIDATION
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_val_predict
 # UTILITY
 import numpy as np
 import matplotlib.pyplot as plt
@@ -174,80 +174,9 @@ print("Removing special characters and html tags from loaded data...\n")
 review_text = preprocess_data(review_text)
 
 ##################################################
-# CLASSIFIERS
-##################################################
-
-
-# Description: Stochastic Gradient Descent classifier
-# Args:
-#   X_train     - train features
-#   y_train     - train labels
-#   X_test      - test features
-# Return:
-#   prediction  - classifier prediction
-def sgd_classifier(X_train, y_train, X_test):
-    clf = SGDClassifier(loss="hinge", penalty="l1")
-
-    clf.fit(X_train, y_train)
-
-    prediction = clf.predict(X_test)
-
-    return prediction
-
-
-# Description: Support Vector Machine classifier
-# Args:
-#   X_train     - train features
-#   y_train     - train labels
-#   X_test      - test features
-# Return:
-#   prediction  - classifier prediction
-def svm_classifier(X_train, y_train, X_test):
-    clf = svm.SVC()
-
-    clf.fit(X_train, y_train)
-
-    prediction = clf.predict(X_test)
-
-    return prediction
-
-
-# Description: Naive Bayes classifier
-# Args:
-#   X_train     - train features
-#   y_train     - train labels
-#   X_test      - test features
-# Return:
-#   prediction  - classifier prediction
-def nb_classifier(X_train, y_train, X_test):
-    clf = MultinomialNB()
-
-    clf.fit(X_train, y_train)
-
-    prediction = clf.predict(X_test)
-
-    return prediction
-
-
-# Description: Maximum Entropy classifier
-# Args:
-#   X_train     - train features
-#   y_train     - train labels
-#   X_test      - test features
-# Return:
-#   prediction  - classifier prediction
-def me_classifier(X_train, y_train, X_test):
-    clf = LogisticRegression()
-
-    clf.fit(X_train, y_train)
-
-    prediction = clf.predict(X_test)
-
-    return prediction
-
-##################################################
 # PLOT CLUSTERED DATA WITH FEATURES
 ##################################################
+
 
 # Description: Plot clustered features to visualize feature performance
 # Args:
@@ -274,29 +203,27 @@ def plot_feature_clusters(X):
 ##################################################
 
 
+# Description: Predict using 5-fold stratified K-fold cross validation
+# Args:
+#   X   - features
 def cross_validate(X):
-    skf = StratifiedKFold(n_splits=5)
-    StratifiedKFold(n_splits=5, random_state=1, shuffle=True)
-    for train_index, test_index in skf.split(X, y):
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+    # perform predictions on classifiers
+    y_pred = cross_val_predict(SGDClassifier(), X, y)
+    print("===============SGD CLASSIFICATION REPORT===============")
+    print(classification_report(y, y_pred))
 
-        # perform predictions on classifierse
-        y_pred = sgd_classifier(X_train, y_train, X_test)
-        print("==========SGD CLASSIFICATION REPORT==========")
-        print(classification_report(y_test, y_pred))\
+    y_pred = cross_val_predict(svm.SVC(), X, y)
+    print("===============SVM CLASSIFICATION REPORT===============")
+    print(classification_report(y, y_pred))
 
-        y_pred = svm_classifier(X_train, y_train, X_test)
-        print("==========SVM CLASSIFICATION REPORT==========")
-        print(classification_report(y_test, y_pred))\
+    y_pred = cross_val_predict(MultinomialNB(), X, y)
+    print("===============NB CLASSIFICATION REPORT===============")
+    print(classification_report(y, y_pred))
 
-        y_pred = nb_classifier(X_train, y_train, X_test)
-        print("==========NB CLASSIFICATION REPORT==========")
-        print(classification_report(y_test, y_pred))
-
-        y_pred = me_classifier(X_train, y_train, X_test)
-        print("==========ME CLASSIFICATION REPORT==========")
-        print(classification_report(y_test, y_pred))
+    y_pred = cross_val_predict(LogisticRegression(), X, y)
+    print("===============ME CLASSIFICATION REPORT===============")
+    print(classification_report(y, y_pred))
+    print("\n\n\n\n")
 
 
 # FEATURE 1
@@ -314,6 +241,7 @@ def tfidf_unigram_test():
     cross_validate(X)
 
     plot_feature_clusters(X)
+
 
 # TODO: FEATURE 2
 # FEATURE 2
@@ -345,12 +273,14 @@ def do_another_test():
 # Feature 1
 print("==========================================")
 print("Testing Feature 1: TFIDF W/ UNIGRAMS...")
+print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_test()
 # TODO: FEATURE 2
 # Feature 2
 print("==========================================")
 print("Testing Feature 2: {FEATURE NAME}...")
+print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 print("N/A")
 # another_test()
@@ -358,11 +288,13 @@ print("N/A")
 # Feature 3
 print("==========================================")
 print("Testing Feature 3: {FEATURE NAME}...")
+print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 print("N/A")
 # do_another_test()
 # TODO: OTHER FEATURES
 print("==========================================")
 print("Testing Feature N: {FEATURE NAME}...")
+print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 print("N/A")
