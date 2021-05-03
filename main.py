@@ -192,10 +192,46 @@ def plot_feature_clusters(X):
     # get unique labels
     u_labels = np.unique(label)
 
+    fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2)
+    ax1.set_title("0 - Mostly Negative")
+    ax2.set_title("1 - Slightly Negative")
+    ax3.set_title("2 - Neutral")
+    ax4.set_title("3 - Slightly Positive")
+    ax5.set_title("4 - Mostly Positive")
+
     # plot results
     for i in u_labels:
-        plt.scatter(df[label == i, 0], df[label == i, 1], label=i)
-    plt.legend()
+        ax1.scatter(df[label == i, 0], df[label == i, 1], label=i, s=50)
+
+    for i in u_labels:
+        ax2.scatter(df[label == i, 0], df[label == i, 1], label=i, s=50)
+
+    for i in u_labels:
+        ax3.scatter(df[label == i, 0], df[label == i, 1], label=i, s=50)
+
+    for i in u_labels:
+        ax4.scatter(df[label == i, 0], df[label == i, 1], label=i, s=50)
+
+    for i in u_labels:
+        ax5.scatter(df[label == i, 0], df[label == i, 1], label=i, s=50)
+
+    for i, label in enumerate(y):
+        if label == 0:
+            ax1.annotate(label, (df[i][0], df[i][1]), xytext=(0, -1), textcoords='offset points', ha='center',
+                         va='center', fontsize='11', color='#000000')
+        elif label == 1:
+            ax2.annotate(label, (df[i][0], df[i][1]), xytext=(0, -1), textcoords='offset points', ha='center',
+                         va='center', fontsize='11', color='#000000')
+        elif label == 2:
+            ax3.annotate(label, (df[i][0], df[i][1]), xytext=(0, -1), textcoords='offset points', ha='center',
+                         va='center', fontsize='11', color='#000000')
+        elif label == 3:
+            ax4.annotate(label, (df[i][0], df[i][1]), xytext=(0, -1), textcoords='offset points', ha='center',
+                         va='center', fontsize='11', color='#000000')
+        elif label == 4:
+            ax5.annotate(label, (df[i][0], df[i][1]), xytext=(0, -1), textcoords='offset points', ha='center',
+                         va='center', fontsize='11', color='#000000')
+
     plt.show()
 
 ##################################################
@@ -233,8 +269,7 @@ def tfidf_unigram_test():
                                analyzer='word',
                                lowercase=True,
                                use_idf=True,
-                               ngram_range=(1, 1),
-                               max_features=5000)
+                               ngram_range=(1, 1))
 
     X = tfidfvec.fit_transform(review_text)
 
