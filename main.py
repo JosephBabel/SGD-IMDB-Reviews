@@ -278,11 +278,14 @@ def tfidf_unigram_test():
     plot_feature_clusters(X)
 
 
-# TODO: FEATURE 2
 # FEATURE 2
-# Description: Add another feature here
-def another_test():
-    tfidfvec = TfidfVectorizer()  # Use this or CountVectorizer
+# Description: Count Vectorizer unigram test with classification report and cross validation
+def count_vectorizer_unigram_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(1, 1))  
 
     X = tfidfvec.fit_transform(review_text)
 
@@ -291,11 +294,301 @@ def another_test():
     plot_feature_clusters(X)
 
 
-# TODO: FEATURE 3
 # FEATURE 3
-# Description: Add another feature here
-def do_another_test():
-    tfidfvec = TfidfVectorizer()  # Use this or CountVectorizer
+# Description: Tfidf unigram max feature 500 test with classification report and cross validation
+def tfidf_unigram_max_feature_500_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(1, 1),
+                               max_features=500)
+                               
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 4
+# Description: Count vectorizer unigram max feature 500 test with classification report and cross validation
+def count_vectorizer_unigram_max_feature_500_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(1, 1),
+                               max_features=500)  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 5
+# Description: Tfidf bigram test with classification report and cross validation
+def tfidf_bigram_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(2, 2))
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 6
+# Description: Count Vectorizer bigram test with classification report and cross validation
+def count_vectorizer_bigram_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(2, 2))  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 7
+# Description: Tfidf bigram max feature 500 test with classification report and cross validation
+def tfidf_bigram_max_feature_500_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(2, 2),
+                               max_features=500)
+                               
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 8
+# Description: Count vectorizer bigram max feature 500 test with classification report and cross validation
+def count_vectorizer_bigram_max_feature_500_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(2, 2),
+                               max_features=500)  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 9
+# Description: Tfidf trigram test with classification report and cross validation
+def tfidf_trigram_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(3, 3))
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 10
+# Description: Count Vectorizer trigram test with classification report and cross validation
+def count_vectorizer_trigram_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(3, 3))  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 11
+# Description: Tfidf trigram max feature 500 test with classification report and cross validation
+def tfidf_trigram_max_feature_500_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(3, 3),
+                               max_features=500)
+                               
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 12
+# Description: Count vectorizer trigram max feature 500 test with classification report and cross validation
+def count_vectorizer_trigram_max_feature_500_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(3, 3),
+                               max_features=500)  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 13
+# Description: Tfidf unigram & bigram test with classification report and cross validation
+def tfidf_unigram_bigram_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(1, 2))
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 14
+# Description: Count Vectorizer unigram & bigram test with classification report and cross validation
+def count_vectorizer_unigram_bigram_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(1, 2))  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 15
+# Description: Tfidf unigram & bigram max feature 500 test with classification report and cross validation
+def tfidf_unigram_bigram_max_feature_500_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(1, 2),
+                               max_features=500)
+                               
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 16
+# Description: Count vectorizer unigram & bigram max feature 500 test with classification report and cross validation
+def count_vectorizer_unigram_bigram_max_feature_500_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(1, 2),
+                               max_features=500)  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X) 
+
+
+# FEATURE 17
+# Description: Tfidf unigram & bigram & trigram test with classification report and cross validation
+def tfidf_unigram_bigram_trigram_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(1, 3))
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 18
+# Description: Count Vectorizer unigram & bigram & trigram test with classification report and cross validation
+def count_vectorizer_unigram_bigram_trigram_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(1, 3))  
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 19
+# Description: Tfidf unigram & bigram & trigram max feature 500 test with classification report and cross validation
+def tfidf_unigram_bigram_trigram_max_feature_500_test():
+    tfidfvec = TfidfVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               use_idf=True,
+                               ngram_range=(1, 3),
+                               max_features=500)
+                               
+
+    X = tfidfvec.fit_transform(review_text)
+
+    cross_validate(X)
+
+    plot_feature_clusters(X)
+
+
+# FEATURE 20
+# Description: Count vectorizer unigram & bigram & trigram max feature 500 test with classification report and cross validation
+def count_vectorizer_unigram_bigram_trigram_max_feature_500_test():
+    tfidfvec = CountVectorizer(stop_words="english",
+                               analyzer='word',
+                               lowercase=True,
+                               # use_idf=True,
+                               ngram_range=(1, 3),
+                               max_features=500)  
 
     X = tfidfvec.fit_transform(review_text)
 
@@ -311,25 +604,136 @@ print("Testing Feature 1: TFIDF W/ UNIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_test()
-# TODO: FEATURE 2
+
 # Feature 2
 print("==========================================")
-print("Testing Feature 2: {FEATURE NAME}...")
+print("Testing Feature 2: COUNTVECTORIZER W/ UNIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
-print("N/A")
-# another_test()
-# TODO: FEATURE 3
+count_vectorizer_unigram_test()
+
 # Feature 3
 print("==========================================")
-print("Testing Feature 3: {FEATURE NAME}...")
+print("Testing Feature 3: TFIDF W/ UNIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
-print("N/A")
-# do_another_test()
-# TODO: OTHER FEATURES
+tfidf_unigram_max_feature_500_test()
+
+# Feature 4
 print("==========================================")
-print("Testing Feature N: {FEATURE NAME}...")
+print("Testing Feature 4: COUNTVECTORIZER W/ UNIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
-print("N/A")
+count_vectorizer_unigram_max_feature_500_test()
+
+# Feature 5
+print("==========================================")
+print("Testing Feature 5: TFIDF W/ BIGRAMS...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_bigram_test()
+
+# Feature 6
+print("==========================================")
+print("Testing Feature 6: COUNTVECTORIZER W/ BIGRAMS...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_bigram_test()
+
+# Feature 7
+print("==========================================")
+print("Testing Feature 7: TFIDF W/ BIGRAMS 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_bigram_max_feature_500_test()
+
+# Feature 8
+print("==========================================")
+print("Testing Feature 8: COUNTVECTORIZER W/ BIGRAMS 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_bigram_max_feature_500_test()
+
+# Feature 9
+print("==========================================")
+print("Testing Feature 9: TFIDF W/ TRIGRAMS...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_trigram_test()
+
+# Feature 10
+print("==========================================")
+print("Testing Feature 10: COUNTVECTORIZER W/ TRIGRAMS...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_trigram_test()
+
+# Feature 11
+print("==========================================")
+print("Testing Feature 11: TFIDF W/ TRIGRAMS 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_trigram_max_feature_500_test()
+
+# Feature 12
+print("==========================================")
+print("Testing Feature 12: COUNTVECTORIZER W/ TRIGRAMS 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_trigram_max_feature_500_test()
+
+# Feature 13
+print("==========================================")
+print("Testing Feature 13: TFIDF W/ UNIGRAMS/BIGRAM...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_unigram_bigram_test()
+
+# Feature 14
+print("==========================================")
+print("Testing Feature 14: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_unigram_bigram_test()
+
+# Feature 15
+print("==========================================")
+print("Testing Feature 15: TFIDF W/ UNIGRAMS/BIGRAM 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_unigram_bigram_max_feature_500_test()
+
+# Feature 16
+print("==========================================")
+print("Testing Feature 16: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_unigram_bigram_max_feature_500_test()
+
+# Feature 17
+print("==========================================")
+print("Testing Feature 17: TFIDF W/ UNIGRAMS/BIGRAM/TRIGRAM...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_unigram_bigram_trigram_test()
+
+# Feature 18
+print("==========================================")
+print("Testing Feature 18: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM/TRIGRAM...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_unigram_bigram_trigram_test()
+
+# Feature 19
+print("==========================================")
+print("Testing Feature 19: TFIDF W/ UNIGRAMS/BIGRAM/TRIGRAM 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+tfidf_unigram_bigram_trigram_max_feature_500_test()
+
+# Feature 20
+print("==========================================")
+print("Testing Feature 20: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM/TRIGRAM 500 MAX...")
+print("(Using stratified 5-fold cross-validation)")
+print("==========================================\n")
+count_vectorizer_unigram_bigram_trigram_max_feature_500_test()
