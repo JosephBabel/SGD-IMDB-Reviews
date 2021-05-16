@@ -7,14 +7,6 @@
 ##################################################
 # Authors: Joseph Babel, Cameron Harte
 ##################################################
-# Task Distribution:
-# 
-# Joseph Babel: Preprocess data, train and test SGD classifier, train and test SVM classifier,
-# build confusion matrix with better prediction metrics
-# 
-# Cameron Harte: Build csv files for train and test data, build ngram models, train and test NB classifier,
-# train and test ME classifier
-##################################################
 # **Required Modules:**
 # Python 3.8.8, scikit-learn 0.24.1, matplotlib 3.3.4
 ##################################################
@@ -32,7 +24,7 @@ from sklearn import svm
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 # METRICS
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, silhouette_score
 # CLUSTERING
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
@@ -182,12 +174,17 @@ review_text = preprocess_data(review_text)
 # Args:
 #   X   - features
 def plot_feature_clusters(X):
-    pca = PCA(2)
+    pca = PCA(n_components=2)
     kmeans = KMeans(n_clusters=5)
     df = pca.fit_transform(X.toarray())
 
     # predict labels for clusters
     label = kmeans.fit_predict(df)
+
+    # print silhouette score
+    score = silhouette_score(X, label, metric='euclidean')
+    print("======================================================")
+    print("Silhouette Score: %.3f" % score)
 
     # get unique labels
     u_labels = np.unique(label)
@@ -244,22 +241,21 @@ def plot_feature_clusters(X):
 #   X   - features
 def cross_validate(X):
     # perform predictions on classifiers
-    y_pred = cross_val_predict(SGDClassifier(), X, y)
+    y_pred = cross_val_predict(SGDClassifier(), X, y, n_jobs=8)
     print("===============SGD CLASSIFICATION REPORT===============")
-    print(classification_report(y, y_pred))
+    print(classification_report(y, y_pred, zero_division=0))
 
-    y_pred = cross_val_predict(svm.SVC(), X, y)
+    y_pred = cross_val_predict(svm.SVC(), X, y, n_jobs=8)
     print("===============SVM CLASSIFICATION REPORT===============")
-    print(classification_report(y, y_pred))
+    print(classification_report(y, y_pred, zero_division=0))
 
-    y_pred = cross_val_predict(MultinomialNB(), X, y)
+    y_pred = cross_val_predict(MultinomialNB(), X, y, n_jobs=8)
     print("===============NB CLASSIFICATION REPORT===============")
-    print(classification_report(y, y_pred))
+    print(classification_report(y, y_pred, zero_division=0))
 
-    y_pred = cross_val_predict(LogisticRegression(), X, y)
+    y_pred = cross_val_predict(LogisticRegression(), X, y, n_jobs=8)
     print("===============ME CLASSIFICATION REPORT===============")
-    print(classification_report(y, y_pred))
-    print("\n\n\n\n")
+    print(classification_report(y, y_pred, zero_division=0))
 
 
 # FEATURE 1
@@ -284,7 +280,6 @@ def count_vectorizer_unigram_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(1, 1))  
 
     X = tfidfvec.fit_transform(review_text)
@@ -318,7 +313,6 @@ def count_vectorizer_unigram_max_feature_500_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(1, 1),
                                max_features=500)  
 
@@ -351,7 +345,6 @@ def count_vectorizer_bigram_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(2, 2))  
 
     X = tfidfvec.fit_transform(review_text)
@@ -370,7 +363,6 @@ def tfidf_bigram_max_feature_500_test():
                                use_idf=True,
                                ngram_range=(2, 2),
                                max_features=500)
-                               
 
     X = tfidfvec.fit_transform(review_text)
 
@@ -385,7 +377,6 @@ def count_vectorizer_bigram_max_feature_500_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(2, 2),
                                max_features=500)  
 
@@ -418,7 +409,6 @@ def count_vectorizer_trigram_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(3, 3))  
 
     X = tfidfvec.fit_transform(review_text)
@@ -452,7 +442,6 @@ def count_vectorizer_trigram_max_feature_500_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(3, 3),
                                max_features=500)  
 
@@ -485,7 +474,6 @@ def count_vectorizer_unigram_bigram_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(1, 2))  
 
     X = tfidfvec.fit_transform(review_text)
@@ -504,7 +492,7 @@ def tfidf_unigram_bigram_max_feature_500_test():
                                use_idf=True,
                                ngram_range=(1, 2),
                                max_features=500)
-                               
+
 
     X = tfidfvec.fit_transform(review_text)
 
@@ -519,7 +507,6 @@ def count_vectorizer_unigram_bigram_max_feature_500_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(1, 2),
                                max_features=500)  
 
@@ -527,7 +514,7 @@ def count_vectorizer_unigram_bigram_max_feature_500_test():
 
     cross_validate(X)
 
-    plot_feature_clusters(X) 
+    plot_feature_clusters(X)
 
 
 # FEATURE 17
@@ -552,7 +539,6 @@ def count_vectorizer_unigram_bigram_trigram_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(1, 3))  
 
     X = tfidfvec.fit_transform(review_text)
@@ -586,7 +572,6 @@ def count_vectorizer_unigram_bigram_trigram_max_feature_500_test():
     tfidfvec = CountVectorizer(stop_words="english",
                                analyzer='word',
                                lowercase=True,
-                               # use_idf=True,
                                ngram_range=(1, 3),
                                max_features=500)  
 
@@ -604,6 +589,7 @@ print("Testing Feature 1: TFIDF W/ UNIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_test()
+print("\n\n\n\n")
 
 # Feature 2
 print("==========================================")
@@ -611,6 +597,7 @@ print("Testing Feature 2: COUNTVECTORIZER W/ UNIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_unigram_test()
+print("\n\n\n\n")
 
 # Feature 3
 print("==========================================")
@@ -618,6 +605,7 @@ print("Testing Feature 3: TFIDF W/ UNIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 4
 print("==========================================")
@@ -625,6 +613,7 @@ print("Testing Feature 4: COUNTVECTORIZER W/ UNIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_unigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 5
 print("==========================================")
@@ -632,6 +621,7 @@ print("Testing Feature 5: TFIDF W/ BIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_bigram_test()
+print("\n\n\n\n")
 
 # Feature 6
 print("==========================================")
@@ -639,6 +629,7 @@ print("Testing Feature 6: COUNTVECTORIZER W/ BIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_bigram_test()
+print("\n\n\n\n")
 
 # Feature 7
 print("==========================================")
@@ -646,6 +637,7 @@ print("Testing Feature 7: TFIDF W/ BIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_bigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 8
 print("==========================================")
@@ -653,6 +645,7 @@ print("Testing Feature 8: COUNTVECTORIZER W/ BIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_bigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 9
 print("==========================================")
@@ -660,6 +653,7 @@ print("Testing Feature 9: TFIDF W/ TRIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_trigram_test()
+print("\n\n\n\n")
 
 # Feature 10
 print("==========================================")
@@ -667,6 +661,7 @@ print("Testing Feature 10: COUNTVECTORIZER W/ TRIGRAMS...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_trigram_test()
+print("\n\n\n\n")
 
 # Feature 11
 print("==========================================")
@@ -674,6 +669,7 @@ print("Testing Feature 11: TFIDF W/ TRIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_trigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 12
 print("==========================================")
@@ -681,6 +677,7 @@ print("Testing Feature 12: COUNTVECTORIZER W/ TRIGRAMS 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_trigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 13
 print("==========================================")
@@ -688,6 +685,7 @@ print("Testing Feature 13: TFIDF W/ UNIGRAMS/BIGRAM...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_bigram_test()
+print("\n\n\n\n")
 
 # Feature 14
 print("==========================================")
@@ -695,6 +693,7 @@ print("Testing Feature 14: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_unigram_bigram_test()
+print("\n\n\n\n")
 
 # Feature 15
 print("==========================================")
@@ -702,6 +701,7 @@ print("Testing Feature 15: TFIDF W/ UNIGRAMS/BIGRAM 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_bigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 16
 print("==========================================")
@@ -709,6 +709,7 @@ print("Testing Feature 16: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_unigram_bigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 17
 print("==========================================")
@@ -716,6 +717,7 @@ print("Testing Feature 17: TFIDF W/ UNIGRAMS/BIGRAM/TRIGRAM...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_bigram_trigram_test()
+print("\n\n\n\n")
 
 # Feature 18
 print("==========================================")
@@ -723,6 +725,7 @@ print("Testing Feature 18: COUNTVECTORIZER W/ UNIGRAMS/BIGRAM/TRIGRAM...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 count_vectorizer_unigram_bigram_trigram_test()
+print("\n\n\n\n")
 
 # Feature 19
 print("==========================================")
@@ -730,6 +733,7 @@ print("Testing Feature 19: TFIDF W/ UNIGRAMS/BIGRAM/TRIGRAM 500 MAX...")
 print("(Using stratified 5-fold cross-validation)")
 print("==========================================\n")
 tfidf_unigram_bigram_trigram_max_feature_500_test()
+print("\n\n\n\n")
 
 # Feature 20
 print("==========================================")
