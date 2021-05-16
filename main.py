@@ -181,6 +181,7 @@ def plot_feature_clusters(X):
     # predict labels for clusters
     label = kmeans.fit_predict(df)
 
+    # print silhouette score
     score = silhouette_score(X, label, metric='euclidean')
     print("======================================================")
     print("Silhouette Score: %.3f" % score)
